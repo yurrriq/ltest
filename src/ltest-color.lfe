@@ -1,8 +1,6 @@
 (defmodule ltest-color
   (export all))
 
-(include-lib "clj/include/compose.lfe")
-
 (defun black (str)
   (case (get-color-option)
     ('false str)
@@ -63,9 +61,5 @@
     ('false str)
     ('true (color:blueb str))))
 
-(defun get-color-option ()
-  (->> (lutil-file:get-arg 'color "true")
-       (element 2)
-       (caar)
-       (list_to_atom)))
 
+(defun get-color-option () (ltest-util:get-arg 'color "true"))

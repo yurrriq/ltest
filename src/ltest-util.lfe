@@ -60,3 +60,7 @@
      (state-skip state)
      (state-fail state)
      (state-cancel state)))
+
+(defun get-arg (key default)
+  (let ((`#(,_ ((,value . ,_) . ,_)) (lutil-file:get-arg key default)))
+    (list_to_atom value)))
