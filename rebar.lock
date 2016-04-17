@@ -1,6 +1,2 @@
-[{<<"color">>,
-  {git,"git://github.com/julianduque/erlang-color.git",
-       {ref,"e60f6302f795220f5f0bee86391ffee5274edec0"}},
-  0},
- {<<"lfe">>,{pkg,<<"lfe">>,<<"1.0.2">>},0},
+[{<<"lfe">>,{pkg,<<"lfe">>,<<"1.0.2">>},0},
  {<<"lutil">>,{pkg,<<"lutil">>,<<"1.0.0">>},0}].

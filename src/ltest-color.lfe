@@ -1,4 +1,7 @@
 (defmodule ltest-color
+  (doc "Partial LFE port of [erlang-color].
+
+  [erlang-color]: https://github.com/julianduque/erlang-color")
   (export (black  1) (blackb  1)
           (white  1) (whiteb  1)
           (red    1) (redb    1)
@@ -6,37 +9,33 @@
           (green  1) (greenb  1)
           (blue   1) (blueb   1)))
 
-(eval-when-compile
-  (defun defcolors*
-    ([`(,color . ,colors) defs]
-     (defcolors* colors (cons `(defcolor ,color (fun color ,color 1)) defs)))
-    ([() defs]
-     `(progn ,@defs)))
-  (defun docstring (color)
-    (++ "If [[get-color-option/0]] returns `` 'true ``, return an iolist\n"
-        "  that will print `str` in " (color->string color)
-        ", otherwise `str`."))
-  (defun color->string (color)
-    (let ((color (atom_to_list color)))
-      (case (lists:last color)
-        (#\b (++ "bold " (lists:droplast color)))
-        (_   color)))))
+(include-lib "ltest/include/color.lfe")
 
-(defmacro defcolor (color func)
-  `(defun ,color (str)
-     ,(docstring color)
-     (if (get-color-option)
-       (funcall ,func str)
-       str)))
 
-(defmacro defcolors color-funcs (defcolors* color-funcs ()))
-
-(defcolors
-  black  blackb
-  white  whiteb
-  red    redb
-  yellow yellowb
-  green  greenb
-  blue   blueb)
+(defun black   (text) (color  (black)  text))
+(defun blackb  (text) (colorb (black)  text))
+(defun white   (text) (color  (white)  text))
+(defun whiteb  (text) (colorb (white)  text))
+(defun red     (text) (color  (red)    text))
+(defun redb    (text) (colorb (red)    text))
+(defun yellow  (text) (color  (yellow) text))
+(defun yellowb (text) (colorb (yellow) text))
+(defun green   (text) (color  (green)  text))
+(defun greenb  (text) (colorb (green)  text))
+(defun blue    (text) (color  (blue)   text))
+(defun blueb   (text) (colorb (blue)   text))
 
 (defun get-color-option () (ltest-util:get-arg 'color "true"))
+
+
+(defun color (color) (binary ((ESC) binary) (color binary) ((END) binary)))
+
+(defun color (color text) (list (color color) text (reset)))
+
+(defun colorb (color text) (list (colorb color) text (reset)))
+
+(defun colorb (color)
+  (binary ((ESC) binary) (color binary)
+    ((SEP) binary) ((BOLD) binary) ((END) binary)))
+
+(defun reset () (binary ((ESC) binary) ((RST) binary) ((END) binary)))
